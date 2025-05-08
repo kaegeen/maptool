@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mind Map Tool</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .draggable {
+      position: absolute;
+      cursor: move;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen relative overflow-hidden">
+  <div class="fixed top-4 left-4 z-10 space-x-2">
+    <button onclick="addNode()" class="bg-blue-600 text-white px-4 py-2 rounded">Add Node</button>
+    <button onclick="clearNodes()" class="bg-red-500 text-white px-4 py-2 rounded">Clear</button>
+  </div>
+
+  <div id="mindmap" class="w-full h-full relative"></div>
+
+  <script>
+    let counter = 0
+
+    function addNode() {
+      const node = document.createElement('div')
+      node.className = 'draggable bg-white shadow-lg rounded p-4 w-48'
+      node.style.top = `${Math.random() * window.innerHeight * 0.8}px`
+      node.style.left = `${Math.random() * window.innerWidth * 0.8}px`
+      node.innerHTML = `
+        <textarea class="w-full h-24 resize-none border p-1" placeholder="Idea ${++counter}"></textarea>
+      `
+      makeDraggable(node)
+      document.getElementById('mindmap').appendChild(node)
+    }
+
+    function makeDraggable(el) {
+      let isDragging = false
+      let offsetX, offsetY
+
+      el.addEventListener('mousedown', e => {
+        isDragging = true
+        offsetX = e.offsetX
+        offsetY = e.offsetY
+      })
+
+      document.addEventListener('mousemove', e => {
+        if (!isDragging) return
+        el.style.left = `${e.pageX - offsetX}px`
+        el.style.top = `${e.pageY - offsetY}px`
+      })
+
+      document.addEventListener('mouseup', () => {
+        isDragging = false
+      })
+    }
+
+    function clearNodes() {
+      document.getElementById('mindmap').innerHTML = ''
+      counter = 0
+    }
+  </script>
+</body>
+</html>
